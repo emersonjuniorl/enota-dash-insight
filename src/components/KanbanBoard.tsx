@@ -26,6 +26,21 @@ const getStatusConfig = (status: string) => {
         color: "bg-info/10 text-info border-info/20",
         icon: <AlertCircle className="h-4 w-4" />
       };
+    case "Bloqueada":
+      return {
+        color: "bg-destructive/10 text-destructive border-destructive/20",
+        icon: <XCircle className="h-4 w-4" />
+      };
+    case "Aguardando Virada":
+      return {
+        color: "bg-purple/10 text-purple border-purple/20",
+        icon: <Clock className="h-4 w-4" />
+      };
+    case "Operação Assistida":
+      return {
+        color: "bg-cyan/10 text-cyan border-cyan/20",
+        icon: <AlertCircle className="h-4 w-4" />
+      };
     case "Concluída":
       return {
         color: "bg-success/10 text-success border-success/20",
@@ -45,7 +60,20 @@ const getStatusConfig = (status: string) => {
 };
 
 export const KanbanBoard = ({ data }: KanbanBoardProps) => {
-  const statusColumns = [...new Set(data.map(item => item.statusImplantacao).filter(Boolean))].sort();
+  // Define the specific order for Kanban columns
+  const statusOrder = [
+    "Não iniciada",
+    "Em execução", 
+    "Bloqueada",
+    "Aguardando Virada",
+    "Operação Assistida",
+    "Concluída"
+  ];
+  
+  // Get unique statuses from data and order them according to statusOrder
+  const allStatuses = [...new Set(data.map(item => item.statusImplantacao).filter(Boolean))];
+  const statusColumns = statusOrder.filter(status => allStatuses.includes(status))
+    .concat(allStatuses.filter(status => !statusOrder.includes(status)));
 
   const getItemsByStatus = (status: string) => {
     return data.filter(item => item.statusImplantacao === status);

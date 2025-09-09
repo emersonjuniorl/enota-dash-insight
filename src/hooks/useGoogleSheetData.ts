@@ -28,17 +28,17 @@ function parseCSV(csv: string): MunicipioData[] {
   const lines = csv.split('\n');
   const data: MunicipioData[] = [];
   
-  // Skip the first 3 lines (header rows)
-  for (let i = 3; i < lines.length; i++) {
+  // Skip the first line (header)
+  for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
     
     // Parse CSV considering quotes and commas
     const columns = parseCSVLine(line);
-    if (columns.length < 18) continue;
+    if (columns.length < 15) continue; // Minimum required columns
     
     const item: MunicipioData = {
-      id: i - 2,
+      id: i,
       database: columns[0] || '',
       entidade: columns[1] || '',
       municipio: columns[2] || '',
@@ -60,7 +60,7 @@ function parseCSV(csv: string): MunicipioData[] {
     };
     
     // Only add rows with valid municipio data
-    if (item.municipio) {
+    if (item.municipio && item.municipio !== 'Município') {
       data.push(item);
     }
   }

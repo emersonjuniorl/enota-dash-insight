@@ -4,89 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { FiltersSidebar } from "./FiltersSidebar";
 import { KanbanBoard } from "./KanbanBoard";
 import { ChartCard } from "./ChartCard";
-import { BarChart3, PieChart, TrendingUp, Users, Building, CheckCircle } from "lucide-react";
-
-// Mock data - will be replaced with Google Sheets integration
-const mockData = [
-  {
-    id: 1,
-    municipio: "São Paulo",
-    proprietario: "João Silva",
-    statusImplantacao: "Em Andamento",
-    tributosCloud: "Ativo",
-    liberadoCrm: "Sim",
-    migracao: "Concluída",
-    ajusteFormula: "Pendente",
-    ajusteRelatorios: "Em Andamento",
-    treinamento: "Agendado",
-    viradaChave: "Não Iniciado"
-  },
-  {
-    id: 2,
-    municipio: "Rio de Janeiro",
-    proprietario: "Maria Santos",
-    statusImplantacao: "Concluído",
-    tributosCloud: "Ativo",
-    liberadoCrm: "Sim",
-    migracao: "Concluída",
-    ajusteFormula: "Concluída",
-    ajusteRelatorios: "Concluída",
-    treinamento: "Concluído",
-    viradaChave: "Concluída"
-  },
-  {
-    id: 3,
-    municipio: "Belo Horizonte",
-    proprietario: "Pedro Costa",
-    statusImplantacao: "Planejamento",
-    tributosCloud: "Inativo",
-    liberadoCrm: "Não",
-    migracao: "Não Iniciado",
-    ajusteFormula: "Não Iniciado",
-    ajusteRelatorios: "Não Iniciado",
-    treinamento: "Não Agendado",
-    viradaChave: "Não Iniciado"
-  },
-  {
-    id: 4,
-    municipio: "Salvador",
-    proprietario: "Ana Lima",
-    statusImplantacao: "Em Andamento",
-    tributosCloud: "Ativo",
-    liberadoCrm: "Sim",
-    migracao: "Em Andamento",
-    ajusteFormula: "Concluída",
-    ajusteRelatorios: "Pendente",
-    treinamento: "Em Andamento",
-    viradaChave: "Não Iniciado"
-  },
-  {
-    id: 5,
-    municipio: "Brasília",
-    proprietario: "Carlos Oliveira",
-    statusImplantacao: "Bloqueado",
-    tributosCloud: "Inativo",
-    liberadoCrm: "Não",
-    migracao: "Bloqueado",
-    ajusteFormula: "Não Iniciado",
-    ajusteRelatorios: "Não Iniciado",
-    treinamento: "Não Agendado",
-    viradaChave: "Não Iniciado"
-  },
-  {
-    id: 6,
-    municipio: "Fortaleza",
-    proprietario: "Lucia Mendes",
-    statusImplantacao: "Concluído",
-    tributosCloud: "Ativo",
-    liberadoCrm: "Sim",
-    migracao: "Concluída",
-    ajusteFormula: "Concluída",
-    ajusteRelatorios: "Concluída",
-    treinamento: "Concluído",
-    viradaChave: "Concluída"
-  }
-];
+import { useGoogleSheetData } from "@/hooks/useGoogleSheetData";
+import { BarChart3, PieChart, TrendingUp, Users, Building, CheckCircle, Loader2 } from "lucide-react";
 
 export interface FilterState {
   municipios: string[];
@@ -97,6 +16,7 @@ export interface FilterState {
 }
 
 export const Dashboard = () => {
+  const { data: sheetData, loading, error } = useGoogleSheetData();
   const [filters, setFilters] = useState<FilterState>({
     municipios: [],
     proprietarios: [],
@@ -106,7 +26,7 @@ export const Dashboard = () => {
   });
 
   // Filter data based on active filters
-  const filteredData = mockData.filter(item => {
+  const filteredData = sheetData.filter(item => {
     return (
       (filters.municipios.length === 0 || filters.municipios.includes(item.municipio)) &&
       (filters.proprietarios.length === 0 || filters.proprietarios.includes(item.proprietario)) &&
@@ -118,16 +38,43 @@ export const Dashboard = () => {
 
   // Calculate metrics
   const totalMunicipios = filteredData.length;
-  const concluidos = filteredData.filter(item => item.statusImplantacao === "Concluído").length;
-  const emAndamento = filteredData.filter(item => item.statusImplantacao === "Em Andamento").length;
-  const tributosAtivos = filteredData.filter(item => item.tributosCloud === "Ativo").length;
+  const concluidos = filteredData.filter(item => item.statusImplantacao === "Concluída").length;
+  const emExecucao = filteredData.filter(item => item.statusImplantacao === "Em execução").length;
+  const tributosImplantados = filteredData.filter(item => item.tributosCloud === "Implantado").length;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-dashboard-bg flex items-center justify-center">
+        <div className="flex items-center gap-2 text-foreground">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>Carregando dados da planilha...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-dashboard-bg flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-destructive text-lg mb-4">Erro ao carregar dados: {error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-dashboard-bg">
       <div className="flex">
         {/* Sidebar with filters */}
         <FiltersSidebar 
-          data={mockData} 
+          data={sheetData} 
           filters={filters} 
           onFiltersChange={setFilters} 
         />
@@ -156,7 +103,7 @@ export const Dashboard = () => {
               <CardContent>
                 <div className="text-2xl font-bold text-foreground">{totalMunicipios}</div>
                 <Badge variant="secondary" className="mt-2">
-                  {mockData.length} total
+                  {sheetData.length} total
                 </Badge>
               </CardContent>
             </Card>
@@ -179,14 +126,14 @@ export const Dashboard = () => {
             <Card className="bg-gradient-card shadow-soft border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Em Andamento
+                  Em Execução
                 </CardTitle>
                 <TrendingUp className="h-4 w-4 text-warning" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{emAndamento}</div>
+                <div className="text-2xl font-bold text-foreground">{emExecucao}</div>
                 <Badge variant="secondary" className="mt-2 bg-warning/10 text-warning">
-                  {totalMunicipios > 0 ? Math.round((emAndamento / totalMunicipios) * 100) : 0}%
+                  {totalMunicipios > 0 ? Math.round((emExecucao / totalMunicipios) * 100) : 0}%
                 </Badge>
               </CardContent>
             </Card>
@@ -194,14 +141,14 @@ export const Dashboard = () => {
             <Card className="bg-gradient-card shadow-soft border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Tributos Ativos
+                  Tributos Implantados
                 </CardTitle>
                 <BarChart3 className="h-4 w-4 text-info" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{tributosAtivos}</div>
+                <div className="text-2xl font-bold text-foreground">{tributosImplantados}</div>
                 <Badge variant="secondary" className="mt-2 bg-info/10 text-info">
-                  {totalMunicipios > 0 ? Math.round((tributosAtivos / totalMunicipios) * 100) : 0}%
+                  {totalMunicipios > 0 ? Math.round((tributosImplantados / totalMunicipios) * 100) : 0}%
                 </Badge>
               </CardContent>
             </Card>

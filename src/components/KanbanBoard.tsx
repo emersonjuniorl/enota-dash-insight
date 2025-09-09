@@ -2,39 +2,56 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Building, User, Clock, CheckCircle, AlertCircle, XCircle } from "lucide-react";
+import { Building, User, Clock, CheckCircle, AlertCircle, XCircle, PlayCircle } from "lucide-react";
+import { MunicipioData } from "@/hooks/useGoogleSheetData";
 
 interface KanbanBoardProps {
-  data: any[];
+  data: MunicipioData[];
 }
 
-const statusConfig = {
-  "Planejamento": {
-    color: "bg-status-pending/10 text-status-pending border-status-pending/20",
-    icon: <Clock className="h-4 w-4" />
-  },
-  "Em Andamento": {
-    color: "bg-status-progress/10 text-status-progress border-status-progress/20",
-    icon: <AlertCircle className="h-4 w-4" />
-  },
-  "Concluído": {
-    color: "bg-status-completed/10 text-status-completed border-status-completed/20",
-    icon: <CheckCircle className="h-4 w-4" />
-  },
-  "Bloqueado": {
-    color: "bg-status-blocked/10 text-status-blocked border-status-blocked/20",
-    icon: <XCircle className="h-4 w-4" />
+const getStatusConfig = (status: string) => {
+  switch (status) {
+    case "Não iniciada":
+      return {
+        color: "bg-slate-100 text-slate-600 border-slate-200",
+        icon: <Clock className="h-4 w-4" />
+      };
+    case "Em execução":
+      return {
+        color: "bg-warning/10 text-warning border-warning/20",
+        icon: <PlayCircle className="h-4 w-4" />
+      };
+    case "Em Conferência":
+      return {
+        color: "bg-info/10 text-info border-info/20",
+        icon: <AlertCircle className="h-4 w-4" />
+      };
+    case "Concluída":
+      return {
+        color: "bg-success/10 text-success border-success/20",
+        icon: <CheckCircle className="h-4 w-4" />
+      };
+    case "Não se Aplica":
+      return {
+        color: "bg-muted/10 text-muted-foreground border-muted/20",
+        icon: <XCircle className="h-4 w-4" />
+      };
+    default:
+      return {
+        color: "bg-slate-100 text-slate-600 border-slate-200",
+        icon: <Clock className="h-4 w-4" />
+      };
   }
 };
 
 export const KanbanBoard = ({ data }: KanbanBoardProps) => {
-  const statusColumns = Object.keys(statusConfig);
+  const statusColumns = [...new Set(data.map(item => item.statusImplantacao).filter(Boolean))].sort();
 
   const getItemsByStatus = (status: string) => {
     return data.filter(item => item.statusImplantacao === status);
   };
 
-  const KanbanCard = ({ item }: { item: any }) => (
+  const KanbanCard = ({ item }: { item: MunicipioData }) => (
     <Card className="mb-3 bg-dashboard-kanban-card hover:shadow-medium transition-all duration-200 cursor-pointer border border-border/50">
       <CardContent className="p-4">
         <div className="space-y-3">
@@ -46,9 +63,9 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
             </div>
             <Badge 
               variant="outline"
-              className={`text-xs ${statusConfig[item.statusImplantacao as keyof typeof statusConfig]?.color || ''}`}
+              className={`text-xs ${getStatusConfig(item.statusImplantacao).color}`}
             >
-              {statusConfig[item.statusImplantacao as keyof typeof statusConfig]?.icon}
+              {getStatusConfig(item.statusImplantacao).icon}
               <span className="ml-1">{item.statusImplantacao}</span>
             </Badge>
           </div>
@@ -71,7 +88,7 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
             <Badge 
               variant="outline" 
               className={`text-xs ${
-                item.tributosCloud === 'Ativo' 
+                item.tributosCloud === 'Implantado' 
                   ? 'bg-success/10 text-success border-success/20' 
                   : 'bg-muted/10 text-muted-foreground border-muted/20'
               }`}
@@ -81,7 +98,7 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
             <Badge 
               variant="outline" 
               className={`text-xs ${
-                item.liberadoCrm === 'Sim' 
+                item.liberadoCrm === 'Liberado' 
                   ? 'bg-success/10 text-success border-success/20' 
                   : 'bg-muted/10 text-muted-foreground border-muted/20'
               }`}
@@ -104,7 +121,7 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
 
   const KanbanColumn = ({ status }: { status: string }) => {
     const items = getItemsByStatus(status);
-    const config = statusConfig[status as keyof typeof statusConfig];
+    const config = getStatusConfig(status);
 
     return (
       <div className="flex-1 min-w-80">
@@ -112,7 +129,7 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center justify-between text-base">
               <div className="flex items-center gap-2">
-                {config?.icon}
+                {config.icon}
                 <span>{status}</span>
               </div>
               <Badge variant="secondary" className="bg-primary/10 text-primary">

@@ -8,9 +8,10 @@ import { Separator } from "@/components/ui/separator";
 import { Filter, X, ChevronDown, ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { FilterState } from "./Dashboard";
+import { MunicipioData } from "@/hooks/useGoogleSheetData";
 
 interface FiltersSidebarProps {
-  data: any[];
+  data: MunicipioData[];
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
 }

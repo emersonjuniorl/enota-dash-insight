@@ -36,30 +36,48 @@ const migracaoColors = {
 };
 
 const ajusteFormulaColors = {
+  "Não iniciada": "hsl(var(--destructive))",
   "Não Iniciada": "hsl(var(--destructive))",
   "Em Execução": "hsl(var(--warning))",
+  "Em execução": "hsl(var(--warning))",
   "Concluída": "hsl(var(--success))",
-  "Não se Aplica": "hsl(var(--muted))"
+  "Concluida": "hsl(var(--success))",
+  "Não se Aplica": "hsl(var(--muted))",
+  "Não se aplica": "hsl(var(--muted))",
+  "N/A": "hsl(var(--muted))"
 };
 
 const ajusteRelatoriosColors = {
+  "Não iniciada": "hsl(var(--destructive))",
   "Não Iniciada": "hsl(var(--destructive))",
   "Em Execução": "hsl(var(--warning))",
+  "Em execução": "hsl(var(--warning))",
   "Concluída": "hsl(var(--success))",
-  "Não se Aplica": "hsl(var(--muted))"
+  "Concluida": "hsl(var(--success))",
+  "Não se Aplica": "hsl(var(--muted))",
+  "Não se aplica": "hsl(var(--muted))",
+  "N/A": "hsl(var(--muted))"
 };
 
 const treinamentoColors = {
+  "Não iniciada": "hsl(var(--destructive))",
   "Não Iniciada": "hsl(var(--destructive))",
   "Em Execução": "hsl(var(--warning))",
+  "Em execução": "hsl(var(--warning))",
   "Concluída": "hsl(var(--success))",
-  "Não se Aplica": "hsl(var(--muted))"
+  "Concluida": "hsl(var(--success))",
+  "Não se Aplica": "hsl(var(--muted))",
+  "Não se aplica": "hsl(var(--muted))",
+  "N/A": "hsl(var(--muted))"
 };
 
 const viradaChaveColors = {
+  "Não iniciada": "hsl(var(--destructive))",
   "Não Iniciada": "hsl(var(--destructive))",
   "Aguardando Data": "hsl(var(--warning))",
-  "Concluída": "hsl(var(--success))"
+  "Bloqueada": "hsl(38, 92%, 50%)", // Orange
+  "Concluída": "hsl(var(--success))",
+  "Concluida": "hsl(var(--success))"
 };
 
 export interface FilterState {

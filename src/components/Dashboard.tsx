@@ -7,6 +7,61 @@ import { ChartCard } from "./ChartCard";
 import { useGoogleSheetData } from "@/hooks/useGoogleSheetData";
 import { BarChart3, PieChart, TrendingUp, Users, Building, CheckCircle, Loader2 } from "lucide-react";
 
+// Color mappings for charts
+const statusImplantacaoColors = {
+  "Não iniciada": "hsl(var(--destructive))",
+  "Em execução": "hsl(var(--warning))",
+  "Operação Assistida": "hsl(var(--info))",
+  "Concluída": "hsl(var(--success))"
+};
+
+const tributosCloudColors = {
+  "Não Contratado": "hsl(var(--destructive))",
+  "Contratado/Aguardando Implantação": "hsl(var(--warning))",
+  "Em Andamento": "hsl(var(--info))",
+  "Implantado": "hsl(var(--success))"
+};
+
+const liberadoCrmColors = {
+  "Não Contratado": "hsl(var(--destructive))",
+  "Contratado": "hsl(var(--warning))",
+  "Liberado": "hsl(var(--success))"
+};
+
+const migracaoColors = {
+  "Não Iniciada": "hsl(var(--destructive))",
+  "Em Execução": "hsl(var(--warning))",
+  "Em Conferência": "hsl(var(--info))",
+  "Concluída": "hsl(var(--success))"
+};
+
+const ajusteFormulaColors = {
+  "Não Iniciada": "hsl(var(--destructive))",
+  "Em Execução": "hsl(var(--warning))",
+  "Concluída": "hsl(var(--success))",
+  "Não se Aplica": "hsl(var(--muted))"
+};
+
+const ajusteRelatoriosColors = {
+  "Não Iniciada": "hsl(var(--destructive))",
+  "Em Execução": "hsl(var(--warning))",
+  "Concluída": "hsl(var(--success))",
+  "Não se Aplica": "hsl(var(--muted))"
+};
+
+const treinamentoColors = {
+  "Não Iniciada": "hsl(var(--destructive))",
+  "Em Execução": "hsl(var(--warning))",
+  "Concluída": "hsl(var(--success))",
+  "Não se Aplica": "hsl(var(--muted))"
+};
+
+const viradaChaveColors = {
+  "Não Iniciada": "hsl(var(--destructive))",
+  "Aguardando Data": "hsl(var(--warning))",
+  "Concluída": "hsl(var(--success))"
+};
+
 export interface FilterState {
   municipios: string[];
   proprietarios: string[];
@@ -166,6 +221,7 @@ export const Dashboard = () => {
               icon={<TrendingUp className="h-5 w-5" />}
               data={filteredData}
               field="statusImplantacao"
+              colorMapping={statusImplantacaoColors}
             />
             
             <ChartCard
@@ -173,6 +229,7 @@ export const Dashboard = () => {
               icon={<BarChart3 className="h-5 w-5" />}
               data={filteredData}
               field="tributosCloud"
+              colorMapping={tributosCloudColors}
             />
             
             <ChartCard
@@ -180,6 +237,7 @@ export const Dashboard = () => {
               icon={<Users className="h-5 w-5" />}
               data={filteredData}
               field="liberadoCrm"
+              colorMapping={liberadoCrmColors}
             />
             
             <ChartCard
@@ -187,6 +245,7 @@ export const Dashboard = () => {
               icon={<PieChart className="h-5 w-5" />}
               data={filteredData}
               field="migracao"
+              colorMapping={migracaoColors}
             />
             
             <ChartCard
@@ -194,6 +253,7 @@ export const Dashboard = () => {
               icon={<BarChart3 className="h-5 w-5" />}
               data={filteredData}
               field="ajusteFormula"
+              colorMapping={ajusteFormulaColors}
             />
             
             <ChartCard
@@ -201,6 +261,7 @@ export const Dashboard = () => {
               icon={<PieChart className="h-5 w-5" />}
               data={filteredData}
               field="ajusteRelatorios"
+              colorMapping={ajusteRelatoriosColors}
             />
             
             <ChartCard
@@ -208,6 +269,7 @@ export const Dashboard = () => {
               icon={<Users className="h-5 w-5" />}
               data={filteredData}
               field="treinamento"
+              colorMapping={treinamentoColors}
             />
             
             <ChartCard
@@ -215,6 +277,7 @@ export const Dashboard = () => {
               icon={<TrendingUp className="h-5 w-5" />}
               data={filteredData}
               field="viradaChave"
+              colorMapping={viradaChaveColors}
             />
           </div>
         </div>

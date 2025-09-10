@@ -7,6 +7,7 @@ interface ChartCardProps {
   icon: ReactNode;
   data: any[];
   field: string;
+  colorMapping?: Record<string, string>;
 }
 
 // Color palette for charts
@@ -21,7 +22,7 @@ const CHART_COLORS = [
   'hsl(45, 75%, 55%)',    // Yellow
 ];
 
-export const ChartCard = ({ title, icon, data, field }: ChartCardProps) => {
+export const ChartCard = ({ title, icon, data, field, colorMapping }: ChartCardProps) => {
   // Count occurrences of each value in the field
   const valueCounts = data.reduce((acc, item) => {
     const value = item[field];
@@ -33,7 +34,7 @@ export const ChartCard = ({ title, icon, data, field }: ChartCardProps) => {
   const chartData = Object.entries(valueCounts).map(([name, value], index) => ({
     name,
     value: value as number,
-    color: CHART_COLORS[index % CHART_COLORS.length]
+    color: colorMapping?.[name] || CHART_COLORS[index % CHART_COLORS.length]
   }));
 
   const total = data.length;

@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Filter, X, ChevronDown, ChevronRight } from "lucide-react";
+import { X, ChevronDown, ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { FilterState } from "./Dashboard";
 import { MunicipioData } from "@/hooks/useGoogleSheetData";
@@ -127,111 +125,63 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
     </Collapsible>
   );
 
-  const FilterContent = () => (
-    <Card className="h-full rounded-none border-0 bg-transparent">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-          <Filter className="h-4 w-4 md:h-5 md:w-5 text-primary" />
-          Filtros
-          {getActiveFiltersCount() > 0 && (
-            <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
-              {getActiveFiltersCount()}
-            </Badge>
-          )}
-        </CardTitle>
+  return (
+    <div className="h-full bg-sidebar-background">
+      <div className="p-4 border-b border-sidebar-border">
         {getActiveFiltersCount() > 0 && (
           <Button 
             variant="outline" 
             size="sm" 
             onClick={clearAllFilters}
-            className="w-full justify-center gap-2 text-xs md:text-sm"
+            className="w-full justify-center gap-2 text-xs"
           >
             <X className="h-3 w-3" />
-            Limpar Filtros
+            Limpar Filtros ({getActiveFiltersCount()})
           </Button>
         )}
-      </CardHeader>
+      </div>
       
-      <CardContent className="px-0">
-        <ScrollArea className="h-[calc(100vh-140px)]">
-          <div className="px-4 md:px-6 space-y-1">
-            <FilterSection
-              title="Município"
-              category="municipios"
-              values={uniqueValues.municipios}
-            />
-            
-            <Separator className="my-2" />
-            
-            <FilterSection
-              title="Proprietário"
-              category="proprietarios"
-              values={uniqueValues.proprietarios}
-            />
-            
-            <Separator className="my-2" />
-            
-            <FilterSection
-              title="Status Implantação"
-              category="statusImplantacao"
-              values={uniqueValues.statusImplantacao}
-            />
-            
-            <Separator className="my-2" />
-            
-            <FilterSection
-              title="Tributos Cloud"
-              category="tributosCloud"
-              values={uniqueValues.tributosCloud}
-            />
-            
-            <Separator className="my-2" />
-            
-            <FilterSection
-              title="Liberado CRM"
-              category="liberadoCrm"
-              values={uniqueValues.liberadoCrm}
-            />
-          </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
-  );
-
-  return (
-    <>
-      {/* Mobile Filter Button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Filter className="h-4 w-4" />
-              Filtros
-              {getActiveFiltersCount() > 0 && (
-                <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
-                  {getActiveFiltersCount()}
-                </Badge>
-              )}
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-80 p-0">
-            <SheetHeader className="px-6 pt-6">
-              <SheetTitle className="flex items-center gap-2">
-                <Filter className="h-5 w-5 text-primary" />
-                Filtros
-              </SheetTitle>
-            </SheetHeader>
-            <div className="px-0 pt-4">
-              <FilterContent />
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block fixed left-0 top-0 h-full w-80 bg-dashboard-sidebar border-r border-border shadow-medium z-10">
-        <FilterContent />
-      </div>
-    </>
+      <ScrollArea className="h-[calc(100vh-120px)]">
+        <div className="p-4 space-y-1">
+          <FilterSection
+            title="Município"
+            category="municipios"
+            values={uniqueValues.municipios}
+          />
+          
+          <Separator className="my-2" />
+          
+          <FilterSection
+            title="Proprietário"
+            category="proprietarios"
+            values={uniqueValues.proprietarios}
+          />
+          
+          <Separator className="my-2" />
+          
+          <FilterSection
+            title="Status Implantação"
+            category="statusImplantacao"
+            values={uniqueValues.statusImplantacao}
+          />
+          
+          <Separator className="my-2" />
+          
+          <FilterSection
+            title="Tributos Cloud"
+            category="tributosCloud"
+            values={uniqueValues.tributosCloud}
+          />
+          
+          <Separator className="my-2" />
+          
+          <FilterSection
+            title="Liberado CRM"
+            category="liberadoCrm"
+            values={uniqueValues.liberadoCrm}
+          />
+        </div>
+      </ScrollArea>
+    </div>
   );
 };

@@ -80,33 +80,33 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
   };
 
   const KanbanCard = ({ item }: { item: MunicipioData }) => (
-    <Card className="mb-3 bg-dashboard-kanban-card hover:shadow-medium transition-all duration-200 cursor-pointer border border-border/50">
-      <CardContent className="p-4">
-        <div className="space-y-3">
+    <Card className="mb-2 md:mb-3 bg-dashboard-kanban-card hover:shadow-medium transition-all duration-200 cursor-pointer border border-border/50">
+      <CardContent className="p-3 md:p-4">
+        <div className="space-y-2 md:space-y-3">
           {/* Header */}
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
-              <Building className="h-4 w-4 text-primary" />
-              <h4 className="font-semibold text-sm text-foreground">{item.municipio}</h4>
+              <Building className="h-3 w-3 md:h-4 md:w-4 text-primary" />
+              <h4 className="font-semibold text-xs md:text-sm text-foreground">{item.municipio}</h4>
             </div>
             <Badge 
               variant="outline"
-              className={`text-xs ${getStatusConfig(item.statusImplantacao).color}`}
+              className={`text-[10px] md:text-xs ${getStatusConfig(item.statusImplantacao).color}`}
             >
               {getStatusConfig(item.statusImplantacao).icon}
-              <span className="ml-1">{item.statusImplantacao}</span>
+              <span className="ml-1 hidden md:inline">{item.statusImplantacao}</span>
             </Badge>
           </div>
 
           {/* Owner */}
           <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarFallback className="text-xs bg-primary/10 text-primary">
+            <Avatar className="h-5 w-5 md:h-6 md:w-6">
+              <AvatarFallback className="text-[10px] md:text-xs bg-primary/10 text-primary">
                 {item.proprietario.split(' ').map((n: string) => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
-            <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <User className="h-3 w-3" />
+            <span className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-1">
+              <User className="h-2 w-2 md:h-3 md:w-3" />
               {item.proprietario}
             </span>
           </div>
@@ -115,29 +115,29 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
           <div className="flex flex-wrap gap-1">
             <Badge 
               variant="outline" 
-              className={`text-xs ${
+              className={`text-[10px] md:text-xs ${
                 item.tributosCloud === 'Implantado' 
                   ? 'bg-success/10 text-success border-success/20' 
                   : 'bg-muted/10 text-muted-foreground border-muted/20'
               }`}
             >
-              Tributos: {item.tributosCloud}
+              <span className="hidden md:inline">Tributos: </span>{item.tributosCloud}
             </Badge>
             <Badge 
               variant="outline" 
-              className={`text-xs ${
+              className={`text-[10px] md:text-xs ${
                 item.liberadoCrm === 'Liberado' 
                   ? 'bg-success/10 text-success border-success/20' 
                   : 'bg-muted/10 text-muted-foreground border-muted/20'
               }`}
             >
-              CRM: {item.liberadoCrm}
+              <span className="hidden md:inline">CRM: </span>{item.liberadoCrm}
             </Badge>
           </div>
 
           {/* Progress indicators */}
-          <div className="text-xs text-muted-foreground">
-            <div className="grid grid-cols-2 gap-1">
+          <div className="text-[10px] md:text-xs text-muted-foreground">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
               <span>Migração: {item.migracao}</span>
               <span>Treinamento: {item.treinamento}</span>
             </div>
@@ -152,25 +152,25 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
     const config = getStatusConfig(status);
 
     return (
-      <div className="flex-1 min-w-80">
+      <div className="flex-1 min-w-60 md:min-w-80">
         <Card className="h-full bg-dashboard-kanban-column border-border/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center justify-between text-base">
-              <div className="flex items-center gap-2">
+          <CardHeader className="pb-2 md:pb-3">
+            <CardTitle className="flex items-center justify-between text-sm md:text-base">
+              <div className="flex items-center gap-1 md:gap-2">
                 {config.icon}
-                <span>{status}</span>
+                <span className="truncate">{status}</span>
               </div>
-              <Badge variant="secondary" className="bg-primary/10 text-primary">
+              <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
                 {items.length}
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-4">
-            <ScrollArea className="h-[600px] pr-2">
+          <CardContent className="px-3 md:px-4">
+            <ScrollArea className="h-[400px] md:h-[600px] pr-2">
               {items.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Building className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Nenhum município neste status</p>
+                <div className="text-center py-6 md:py-8 text-muted-foreground">
+                  <Building className="h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 opacity-50" />
+                  <p className="text-xs md:text-sm">Nenhum município neste status</p>
                 </div>
               ) : (
                 items.map((item) => (
@@ -186,14 +186,14 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
 
   return (
     <Card className="bg-gradient-card shadow-soft border-0">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <Building className="h-6 w-6 text-primary" />
-          Visão Kanban - Municípios por Status
+      <CardHeader className="pb-3 md:pb-6">
+        <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+          <Building className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+          <span className="text-sm md:text-xl">Visão Kanban - Municípios por Status</span>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex gap-6 overflow-x-auto pb-4">
+      <CardContent className="px-3 md:px-6">
+        <div className="flex gap-3 md:gap-6 overflow-x-auto pb-4">
           {statusColumns.map((status) => (
             <KanbanColumn key={status} status={status} />
           ))}

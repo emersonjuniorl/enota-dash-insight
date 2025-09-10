@@ -144,38 +144,40 @@ export const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-dashboard-bg">
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row">
         {/* Sidebar with filters */}
-        <FiltersSidebar 
-          data={sheetData} 
-          filters={filters} 
-          onFiltersChange={setFilters} 
-        />
+        <div className="lg:fixed lg:inset-y-0 lg:left-0 lg:w-80">
+          <FiltersSidebar 
+            data={sheetData} 
+            filters={filters} 
+            onFiltersChange={setFilters} 
+          />
+        </div>
 
         {/* Main content */}
-        <div className="flex-1 p-6 ml-80">
+        <div className="flex-1 lg:ml-80 pt-16 lg:pt-0 p-4 md:p-6">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
               Painel eNota Cloud
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm md:text-base text-muted-foreground">
               Acompanhe o progresso da implantação do sistema nos municípios
             </p>
           </div>
 
           {/* Metrics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
             <Card className="bg-gradient-card shadow-soft border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   Total de Municípios
                 </CardTitle>
-                <Building className="h-4 w-4 text-primary" />
+                <Building className="h-3 w-3 md:h-4 md:w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{totalMunicipios}</div>
-                <Badge variant="secondary" className="mt-2">
+                <div className="text-xl md:text-2xl font-bold text-foreground">{totalMunicipios}</div>
+                <Badge variant="secondary" className="mt-1 md:mt-2 text-xs">
                   {sheetData.length} total
                 </Badge>
               </CardContent>
@@ -183,14 +185,14 @@ export const Dashboard = () => {
 
             <Card className="bg-gradient-card shadow-soft border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   Concluídos
                 </CardTitle>
-                <CheckCircle className="h-4 w-4 text-success" />
+                <CheckCircle className="h-3 w-3 md:h-4 md:w-4 text-success" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{concluidos}</div>
-                <Badge variant="secondary" className="mt-2 bg-success/10 text-success">
+                <div className="text-xl md:text-2xl font-bold text-foreground">{concluidos}</div>
+                <Badge variant="secondary" className="mt-1 md:mt-2 bg-success/10 text-success text-xs">
                   {totalMunicipios > 0 ? Math.round((concluidos / totalMunicipios) * 100) : 0}%
                 </Badge>
               </CardContent>
@@ -198,14 +200,14 @@ export const Dashboard = () => {
 
             <Card className="bg-gradient-card shadow-soft border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   Em Execução
                 </CardTitle>
-                <TrendingUp className="h-4 w-4 text-warning" />
+                <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-warning" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{emExecucao}</div>
-                <Badge variant="secondary" className="mt-2 bg-warning/10 text-warning">
+                <div className="text-xl md:text-2xl font-bold text-foreground">{emExecucao}</div>
+                <Badge variant="secondary" className="mt-1 md:mt-2 bg-warning/10 text-warning text-xs">
                   {totalMunicipios > 0 ? Math.round((emExecucao / totalMunicipios) * 100) : 0}%
                 </Badge>
               </CardContent>
@@ -213,14 +215,14 @@ export const Dashboard = () => {
 
             <Card className="bg-gradient-card shadow-soft border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   Tributos Implantados
                 </CardTitle>
-                <BarChart3 className="h-4 w-4 text-info" />
+                <BarChart3 className="h-3 w-3 md:h-4 md:w-4 text-info" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{tributosImplantados}</div>
-                <Badge variant="secondary" className="mt-2 bg-info/10 text-info">
+                <div className="text-xl md:text-2xl font-bold text-foreground">{tributosImplantados}</div>
+                <Badge variant="secondary" className="mt-1 md:mt-2 bg-info/10 text-info text-xs">
                   {totalMunicipios > 0 ? Math.round((tributosImplantados / totalMunicipios) * 100) : 0}%
                 </Badge>
               </CardContent>
@@ -228,12 +230,12 @@ export const Dashboard = () => {
           </div>
 
           {/* Kanban Board */}
-          <div className="mb-8">
+          <div className="mb-6 md:mb-8">
             <KanbanBoard data={filteredData} />
           </div>
 
           {/* Charts Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
             <ChartCard
               title="Status da Implantação"
               icon={<TrendingUp className="h-5 w-5" />}

@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/s
 import { AppSidebar } from "./AppSidebar";
 import { KanbanBoard } from "./KanbanBoard";
 import { ChartCard } from "./ChartCard";
+import { BurndownChart } from "./BurndownChart";
 import { useGoogleSheetData } from "@/hooks/useGoogleSheetData";
 import { BarChart3, PieChart, TrendingUp, Users, Building, CheckCircle, Loader2, Menu } from "lucide-react";
 
@@ -238,6 +239,9 @@ export const Dashboard = () => {
 
             {/* Kanban Board */}
             <KanbanBoard data={filteredData} />
+
+            {/* Burndown Chart */}
+            <BurndownChart data={filteredData} />
 
             {/* Charts Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">

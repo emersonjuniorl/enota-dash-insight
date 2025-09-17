@@ -1,4 +1,4 @@
-//AJUSTES EJL (corrigido tooltip)
+//AJUSTES EJL (corrigido tooltip + REAL só até semana vigente)
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
@@ -91,6 +91,14 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
     const concluidoAteAgora = totalMunicipios - realAtual;
     const velocidadeSemanal = concluidoAteAgora / semanasConcluidas; // municípios/semana
 
+    // 🔹 AJUSTE: cortar o REAL depois da semana atual
+    for (let i = 0; i < weeklyData.length; i++) {
+      if (i > t0) {
+        weeklyData[i].real = null;
+      }
+    }
+
+    // Calcular PROJETADO
     for (let i = 0; i < weeklyData.length; i++) {
       if (i < t0) {
         weeklyData[i].projetado = null; // não plota no passado
@@ -101,6 +109,7 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
       }
     }
 
+    // Delta de atraso/adianto
     const semanasRestantesProjetadas = Math.ceil(
       realAtual / Math.max(velocidadeSemanal, 0.000001)
     );

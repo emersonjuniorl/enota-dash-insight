@@ -175,15 +175,10 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
               />
               <ChartTooltip 
                 content={<ChartTooltipContent 
-                  formatter={(value, name) => {
-                    const suffix = name === 'ideal'
-                      ? 'municípiosPlanejado'
-                      : name === 'real'
-                      ? 'municípiosReal'
-                      : 'municípiosProjetado';
-                    const displayName = name === 'ideal' ? 'Planejado' : name === 'real' ? 'Real' : 'Projetado';
-                    return [`${value} ${suffix}`, displayName];
-                  }}
+                  formatter={(value, name) => [
+                    `${value} municípios`,
+                    name === 'ideal' ? 'Planejado' : name === 'real' ? 'Real' : 'Projetado'
+                  ]}
                   labelFormatter={(label, payload) => {
                     const data = payload?.[0]?.payload;
                     return data ? `${label} (${data.data})` : label;

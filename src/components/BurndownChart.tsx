@@ -1,3 +1,4 @@
+//AJUSTES EJL
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
@@ -51,7 +52,6 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
       }
     });
 
-    let municipiosRestantes = totalMunicipios;
     let municipiosFinalizadosAcumulado = 0;
 
     for (let week = 0; week < totalWeeks; week++) {
@@ -77,10 +77,63 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
       });
     }
 
+    // ===== Série PROJETADO baseada até a ÚLTIMA semana com entregas =====
+    let ultimaSemanaComEntrega = -1;
+    for (let i = weeklyData.length - 1; i >= 0; i--) {
+      if (weeklyData[i].finalizados > 0) {
+        ultimaSemanaComEntrega = i;
+        break;
+      }
+    }
+
+    if (ultimaSemanaComEntrega >= 0) {
+      const t0 = ultimaSemanaComEntrega; // pivô da projeção
+      const realAtual = weeklyData[t0].real;
+      const semanasConcluidas = Math.max(1, t0);
+      const concluidoAteAgora = totalMunicipios - realAtual;
+      const velocidadeSemanal = concluidoAteAgora / semanasConcluidas; // municípios/semana
+
+      for (let i = 0; i < weeklyData.length; i++) {
+        if (i < t0) {
+          // não plota no passado
+          weeklyData[i].projetado = null;
+        } else {
+          const semanasDesdeT0 = i - t0;
+          const restante = Math.max(realAtual - velocidadeSemanal * semanasDesdeT0, 0);
+          weeklyData[i].projetado = Math.round(restante);
+        }
+      }
+
+      // meta para atraso/adianto
+      const semanasRestantesProjetadas = Math.ceil(
+        realAtual / Math.max(velocidadeSemanal, 0.000001)
+      );
+      const semanasPlanejadasRestantes = totalWeeks - (t0 + 1);
+      (weeklyData).__meta = {
+        deltaSemanas: semanasRestantesProjetadas - semanasPlanejadasRestantes
+      };
+    } else {
+      // sem entregas ainda: não desenha projetado
+      for (let i = 0; i < weeklyData.length; i++) {
+        weeklyData[i].projetado = null;
+      }
+      (weeklyData).__meta = { deltaSemanas: null };
+    }
+
     return weeklyData;
   };
 
   const chartData = generateWeeklyData();
+
+  const deltaSemanas = chartData.__meta?.deltaSemanas;
+  const deltaTexto =
+    deltaSemanas === null || deltaSemanas === undefined
+      ? 'sem entregas para projetar'
+      : deltaSemanas === 0
+      ? 'no prazo'
+      : deltaSemanas > 0
+      ? `${deltaSemanas} semana(s) de atraso`
+      : `${Math.abs(deltaSemanas)} semana(s) adiantado`;
 
   const chartConfig = {
     ideal: {
@@ -90,6 +143,10 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
     real: {
       label: "Real", 
       color: "hsl(var(--success))"
+    },
+    projetado: {
+      label: "Projetado",
+      color: "hsl(var(--warning))"
     }
   };
 
@@ -102,7 +159,7 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
             Burndown Chart
           </CardTitle>
           <p className="text-xs md:text-sm text-muted-foreground mt-1">
-            Progresso de implantação vs. planejamento ({totalMunicipios} municípios)
+            Progresso de implantação vs. planejamento ({totalMunicipios} municípios) — {deltaTexto}
           </p>
         </div>
       </CardHeader>
@@ -131,7 +188,7 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
                 content={<ChartTooltipContent 
                   formatter={(value, name) => [
                     `${value} municípios`,
-                    name === 'ideal' ? 'Planejado' : 'Real'
+                    name === 'ideal' ? 'Planejado' : name === 'real' ? 'Real' : 'Projetado'
                   ]}
                   labelFormatter={(label, payload) => {
                     const data = payload?.[0]?.payload;
@@ -159,6 +216,14 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
                 strokeWidth={3}
                 dot={{ fill: 'hsl(var(--success))', strokeWidth: 2, r: 4 }}
                 name="Real"
+              />
+              <Line 
+                type="monotone" 
+                dataKey="projetado" 
+                stroke="hsl(var(--warning))"
+                strokeWidth={2}
+                dot={false}
+                name="Projetado"
               />
             </LineChart>
           </ResponsiveContainer>

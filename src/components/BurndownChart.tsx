@@ -77,48 +77,37 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
       });
     }
 
-    // ===== Série PROJETADO baseada até a ÚLTIMA semana com entregas =====
-    let ultimaSemanaComEntrega = -1;
-    for (let i = weeklyData.length - 1; i >= 0; i--) {
-      if (weeklyData[i].finalizados > 0) {
-        ultimaSemanaComEntrega = i;
-        break;
+    // ===== Série PROJETADO baseada até a SEMANA ATUAL do calendário =====
+    const today = new Date();
+    let semanaAtualIndex = 0;
+    for (let i = 0; i < totalWeeks; i++) {
+      const currentWeekStart = addWeeks(startDate, i);
+      if (currentWeekStart <= today) semanaAtualIndex = i;
+    }
+
+    const t0 = Math.min(Math.max(0, semanaAtualIndex), totalWeeks - 1); // pivô na semana atual
+    const realAtual = weeklyData[t0]?.real ?? totalMunicipios;
+    const semanasConcluidas = Math.max(1, t0);
+    const concluidoAteAgora = totalMunicipios - realAtual;
+    const velocidadeSemanal = concluidoAteAgora / semanasConcluidas; // municípios/semana
+
+    for (let i = 0; i < weeklyData.length; i++) {
+      if (i < t0) {
+        weeklyData[i].projetado = null; // não plota no passado
+      } else {
+        const semanasDesdeT0 = i - t0;
+        const restante = Math.max(realAtual - velocidadeSemanal * semanasDesdeT0, 0);
+        weeklyData[i].projetado = Math.round(restante);
       }
     }
 
-    if (ultimaSemanaComEntrega >= 0) {
-      const t0 = ultimaSemanaComEntrega; // pivô da projeção
-      const realAtual = weeklyData[t0].real;
-      const semanasConcluidas = Math.max(1, t0);
-      const concluidoAteAgora = totalMunicipios - realAtual;
-      const velocidadeSemanal = concluidoAteAgora / semanasConcluidas; // municípios/semana
-
-      for (let i = 0; i < weeklyData.length; i++) {
-        if (i < t0) {
-          // não plota no passado
-          weeklyData[i].projetado = null;
-        } else {
-          const semanasDesdeT0 = i - t0;
-          const restante = Math.max(realAtual - velocidadeSemanal * semanasDesdeT0, 0);
-          weeklyData[i].projetado = Math.round(restante);
-        }
-      }
-
-      // meta para atraso/adianto
-      const semanasRestantesProjetadas = Math.ceil(
-        realAtual / Math.max(velocidadeSemanal, 0.000001)
-      );
-      const semanasPlanejadasRestantes = totalWeeks - (t0 + 1);
-      (weeklyData).__meta = {
-        deltaSemanas: semanasRestantesProjetadas - semanasPlanejadasRestantes
-      };
-    } else {
-      // sem entregas ainda: não desenha projetado
-      for (let i = 0; i < weeklyData.length; i++) {
-        weeklyData[i].projetado = null;
-      }
-      (weeklyData).__meta = { deltaSemanas: null };
-    }
+    const semanasRestantesProjetadas = Math.ceil(
+      realAtual / Math.max(velocidadeSemanal, 0.000001)
+    );
+    const semanasPlanejadasRestantes = totalWeeks - (t0 + 1);
+    (weeklyData).__meta = {
+      deltaSemanas: semanasRestantesProjetadas - semanasPlanejadasRestantes
+    };
 
     return weeklyData;
   };

@@ -1,4 +1,4 @@
-//AJUSTES EJL
+//AJUSTES EJL (corrigido tooltip)
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
@@ -20,7 +20,7 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
 
   // Gerar dados das semanas
   const generateWeeklyData = () => {
-    const weeklyData = [];
+    const weeklyData: any[] = [];
     
     // Contar municípios finalizados por semana
     const municipiosFinalizadosPorSemana: { [key: string]: number } = {};
@@ -105,7 +105,7 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
       realAtual / Math.max(velocidadeSemanal, 0.000001)
     );
     const semanasPlanejadasRestantes = totalWeeks - (t0 + 1);
-    (weeklyData).__meta = {
+    (weeklyData as any).__meta = {
       deltaSemanas: semanasRestantesProjetadas - semanasPlanejadasRestantes
     };
 
@@ -114,7 +114,7 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
 
   const chartData = generateWeeklyData();
 
-  const deltaSemanas = chartData.__meta?.deltaSemanas;
+  const deltaSemanas = (chartData as any).__meta?.deltaSemanas;
   const deltaTexto =
     deltaSemanas === null || deltaSemanas === undefined
       ? 'sem entregas para projetar'
@@ -175,10 +175,17 @@ export const BurndownChart = ({ data }: BurndownChartProps) => {
               />
               <ChartTooltip 
                 content={<ChartTooltipContent 
-                  formatter={(value, name) => [
-                    `${value} municípios`,
-                    name === 'ideal' ? 'Planejado' : name === 'real' ? 'Real' : 'Projetado'
-                  ]}
+                  formatter={(value, name) => {
+                    // normaliza tanto dataKey quanto rótulo (name prop)
+                    const key = String(name || '').toLowerCase();
+                    let displayName = String(name || '');
+
+                    if (key === 'ideal' || key.includes('planejad')) displayName = 'Planejado';
+                    else if (key === 'real') displayName = 'Real';
+                    else if (key === 'projetado' || key.includes('projet')) displayName = 'Projetado';
+                    // retorna [valor-formatado, rótulo]
+                    return [`${value} municípios`, displayName];
+                  }}
                   labelFormatter={(label, payload) => {
                     const data = payload?.[0]?.payload;
                     return data ? `${label} (${data.data})` : label;

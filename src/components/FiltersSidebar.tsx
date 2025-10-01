@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { X, ChevronDown, ChevronRight } from "lucide-react";
+import { X, ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { FilterState } from "./Dashboard";
 import { MunicipioData } from "@/hooks/useGoogleSheetData";
@@ -23,6 +24,15 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
     statusImplantacao: true,
     tributosCloud: true,
     liberadoCrm: true,
+  });
+
+  const [searchTerms, setSearchTerms] = useState({
+    municipios: "",
+    proprietarios: "",
+    portfolios: "",
+    statusImplantacao: "",
+    tributosCloud: "",
+    liberadoCrm: "",
   });
 
   // Extract unique values for each filter
@@ -75,7 +85,13 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
     title: string; 
     category: keyof FilterState; 
     values: string[] 
-  }) => (
+  }) => {
+    const searchTerm = searchTerms[category];
+    const filteredValues = values.filter(value => 
+      value.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
     <Collapsible 
       open={expandedSections[category]} 
       onOpenChange={() => toggleSection(category)}
@@ -101,10 +117,19 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div className="px-3 pb-2">
+        <div className="px-3 pb-2 space-y-2">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Pesquisar..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerms(prev => ({ ...prev, [category]: e.target.value }))}
+              className="pl-8 h-9 text-sm"
+            />
+          </div>
           <ScrollArea className="max-h-60 overflow-y-auto">
             <div className="space-y-2 pr-4">
-              {values.map((value) => (
+              {filteredValues.map((value) => (
                 <div key={value} className="flex items-center space-x-2">
                   <Checkbox
                     id={`${category}-${value}`}
@@ -126,7 +151,8 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
         </div>
       </CollapsibleContent>
     </Collapsible>
-  );
+    );
+  };
 
   return (
     <div className="h-full bg-sidebar-background">

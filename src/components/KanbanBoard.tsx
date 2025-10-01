@@ -102,12 +102,12 @@ export const KanbanBoard = ({ data }: KanbanBoardProps) => {
           <div className="flex items-center gap-2">
             <Avatar className="h-5 w-5 md:h-6 md:w-6">
               <AvatarFallback className="text-[10px] md:text-xs bg-primary/10 text-primary">
-                {item.proprietario.split(' ').map((n: string) => n[0]).join('')}
+                {item.portfolio.split(' ').map((n: string) => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
             <span className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-1">
               <User className="h-2 w-2 md:h-3 md:w-3" />
-              {item.proprietario}
+              {item.portfolio}
             </span>
           </div>
 

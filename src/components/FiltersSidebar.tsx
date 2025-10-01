@@ -18,7 +18,7 @@ interface FiltersSidebarProps {
 export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSidebarProps) => {
   const [expandedSections, setExpandedSections] = useState({
     municipios: true,
-    proprietarios: true,
+    portfolios: true,
     statusImplantacao: true,
     tributosCloud: true,
     liberadoCrm: true,
@@ -27,7 +27,7 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
   // Extract unique values for each filter
   const uniqueValues = {
     municipios: [...new Set(data.map(item => item.municipio))].sort(),
-    proprietarios: [...new Set(data.map(item => item.proprietario))].sort(),
+    portfolios: [...new Set(data.map(item => item.portfolio))].sort(),
     statusImplantacao: [...new Set(data.map(item => item.statusImplantacao))].sort(),
     tributosCloud: [...new Set(data.map(item => item.tributosCloud))].sort(),
     liberadoCrm: [...new Set(data.map(item => item.liberadoCrm))].sort(),
@@ -46,7 +46,7 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
   const clearAllFilters = () => {
     onFiltersChange({
       municipios: [],
-      proprietarios: [],
+      portfolios: [],
       statusImplantacao: [],
       tributosCloud: [],
       liberadoCrm: []
@@ -152,9 +152,9 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
           <Separator className="my-2" />
           
           <FilterSection
-            title="Proprietário"
-            category="proprietarios"
-            values={uniqueValues.proprietarios}
+            title="Portfólio"
+            category="portfolios"
+            values={uniqueValues.portfolios}
           />
           
           <Separator className="my-2" />

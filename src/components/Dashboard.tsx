@@ -37,6 +37,12 @@ const migracaoColors = {
   "Concluída": "hsl(var(--success))"
 };
 
+const conferenciaMigracaoColors = {
+  "Não Iniciada": "hsl(var(--destructive))",
+  "Em Execução": "hsl(var(--warning))",
+  "Concluída": "hsl(var(--success))"
+};
+
 const ajusteFormulaColors = {
   "Não iniciada": "hsl(var(--destructive))",
   "Não Iniciada": "hsl(var(--destructive))",
@@ -84,7 +90,7 @@ const viradaChaveColors = {
 
 export interface FilterState {
   municipios: string[];
-  proprietarios: string[];
+  portfolios: string[];
   statusImplantacao: string[];
   tributosCloud: string[];
   liberadoCrm: string[];
@@ -94,7 +100,7 @@ export const Dashboard = () => {
   const { data: sheetData, loading, error } = useGoogleSheetData();
   const [filters, setFilters] = useState<FilterState>({
     municipios: [],
-    proprietarios: [],
+    portfolios: [],
     statusImplantacao: [],
     tributosCloud: [],
     liberadoCrm: []
@@ -104,7 +110,7 @@ export const Dashboard = () => {
   const filteredData = sheetData.filter(item => {
     return (
       (filters.municipios.length === 0 || filters.municipios.includes(item.municipio)) &&
-      (filters.proprietarios.length === 0 || filters.proprietarios.includes(item.proprietario)) &&
+      (filters.portfolios.length === 0 || filters.portfolios.includes(item.portfolio)) &&
       (filters.statusImplantacao.length === 0 || filters.statusImplantacao.includes(item.statusImplantacao)) &&
       (filters.tributosCloud.length === 0 || filters.tributosCloud.includes(item.tributosCloud)) &&
       (filters.liberadoCrm.length === 0 || filters.liberadoCrm.includes(item.liberadoCrm))
@@ -307,6 +313,14 @@ export const Dashboard = () => {
                 data={filteredData}
                 field="viradaChave"
                 colorMapping={viradaChaveColors}
+              />
+              
+              <ChartCard
+                title="Conferência Migração"
+                icon={<PieChart className="h-5 w-5" />}
+                data={filteredData}
+                field="conferenciaMigracao"
+                colorMapping={conferenciaMigracaoColors}
               />
             </div>
           </div>

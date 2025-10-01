@@ -6,9 +6,10 @@ export interface MunicipioData {
   entidade: string;
   municipio: string;
   uf: string;
-  proprietario: string;
+  portfolio: string;
   chamado: string;
   migracao: string;
+  conferenciaMigracao: string;
   ajusteFormula: string;
   ajusteRelatorios: string;
   configuracoes: string;
@@ -22,7 +23,7 @@ export interface MunicipioData {
   observacoes: string;
 }
 
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ptMZq6MiimsIEkIEShb7XY4TNQJmQpIQZlcEnshZJ7o/export?format=csv&gid=0';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1-whKDk6Tpb4opPTvp6wywAIUDOXWpkhHXF28ZwA8zHA/export?format=csv&gid=1733723722';
 
 function parseCSV(csv: string): MunicipioData[] {
   const lines = csv.split('\n');
@@ -43,20 +44,21 @@ function parseCSV(csv: string): MunicipioData[] {
       entidade: columns[1] || '',
       municipio: columns[2] || '',
       uf: columns[3] || '',
-      proprietario: columns[4] || '',
+      portfolio: columns[4] || '',
       chamado: columns[5] || '',
       migracao: columns[6] || '',
-      ajusteFormula: columns[7] || '',
-      ajusteRelatorios: columns[8] || '',
-      configuracoes: columns[9] || '',
-      treinamento: columns[10] || '',
-      viradaChave: columns[11] || '',
-      tributosCloud: columns[12] || '',
-      liberadoCrm: columns[13] || '',
-      statusImplantacao: columns[14] || '',
-      chamadoImplantacao: columns[15] || '',
-      dataVirada: columns[16] || '',
-      observacoes: columns[17] || ''
+      conferenciaMigracao: columns[7] || '',
+      ajusteFormula: columns[8] || '',
+      ajusteRelatorios: columns[9] || '',
+      configuracoes: columns[10] || '',
+      treinamento: columns[11] || '',
+      viradaChave: columns[12] || '',
+      tributosCloud: columns[13] || '',
+      liberadoCrm: columns[14] || '',
+      statusImplantacao: columns[15] || '',
+      chamadoImplantacao: columns[16] || '',
+      dataVirada: columns[17] || '',
+      observacoes: columns[18] || ''
     };
     
     // Only add rows with valid municipio data

@@ -44,21 +44,21 @@ function parseCSV(csv: string): MunicipioData[] {
       entidade: columns[1] || '',
       municipio: columns[2] || '',
       uf: columns[3] || '',
-      portfolio: columns[4] || '',
-      chamado: columns[5] || '',
-      migracao: columns[6] || '',
-      conferenciaMigracao: columns[7] || '',
-      ajusteFormula: columns[8] || '',
-      ajusteRelatorios: columns[9] || '',
-      configuracoes: columns[10] || '',
-      treinamento: columns[11] || '',
-      viradaChave: columns[12] || '',
-      tributosCloud: columns[13] || '',
-      liberadoCrm: columns[14] || '',
-      statusImplantacao: columns[15] || '',
-      chamadoImplantacao: columns[16] || '',
-      dataVirada: columns[17] || '',
-      observacoes: columns[18] || ''
+      portfolio: columns[5] || '', // Coluna 5 = Portfólio
+      chamado: columns[6] || '',
+      migracao: columns[7] || '',
+      conferenciaMigracao: columns[8] || '', // Nova coluna
+      ajusteFormula: columns[9] || '',
+      ajusteRelatorios: columns[10] || '',
+      configuracoes: columns[11] || '',
+      treinamento: columns[12] || '',
+      viradaChave: columns[13] || '',
+      tributosCloud: columns[14] || '',
+      liberadoCrm: columns[15] || '',
+      statusImplantacao: columns[16] || '',
+      chamadoImplantacao: columns[17] || '',
+      dataVirada: columns[18] || '',
+      observacoes: columns[19] || ''
     };
     
     // Only add rows with valid municipio data

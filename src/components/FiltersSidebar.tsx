@@ -18,6 +18,7 @@ interface FiltersSidebarProps {
 export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSidebarProps) => {
   const [expandedSections, setExpandedSections] = useState({
     municipios: true,
+    proprietarios: true,
     portfolios: true,
     statusImplantacao: true,
     tributosCloud: true,
@@ -27,6 +28,7 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
   // Extract unique values for each filter
   const uniqueValues = {
     municipios: [...new Set(data.map(item => item.municipio))].sort(),
+    proprietarios: [...new Set(data.map(item => item.proprietario))].sort(),
     portfolios: [...new Set(data.map(item => item.portfolio))].sort(),
     statusImplantacao: [...new Set(data.map(item => item.statusImplantacao))].sort(),
     tributosCloud: [...new Set(data.map(item => item.tributosCloud))].sort(),
@@ -46,6 +48,7 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
   const clearAllFilters = () => {
     onFiltersChange({
       municipios: [],
+      proprietarios: [],
       portfolios: [],
       statusImplantacao: [],
       tributosCloud: [],
@@ -99,8 +102,8 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
       </CollapsibleTrigger>
       <CollapsibleContent>
         <div className="px-3 pb-2">
-          <ScrollArea className="max-h-48">
-            <div className="space-y-2">
+          <ScrollArea className="max-h-60 overflow-y-auto">
+            <div className="space-y-2 pr-4">
               {values.map((value) => (
                 <div key={value} className="flex items-center space-x-2">
                   <Checkbox
@@ -147,6 +150,14 @@ export const FiltersSidebar = ({ data, filters, onFiltersChange }: FiltersSideba
             title="Município"
             category="municipios"
             values={uniqueValues.municipios}
+          />
+          
+          <Separator className="my-2" />
+          
+          <FilterSection
+            title="Proprietário"
+            category="proprietarios"
+            values={uniqueValues.proprietarios}
           />
           
           <Separator className="my-2" />

@@ -6,6 +6,7 @@ export interface MunicipioData {
   entidade: string;
   municipio: string;
   uf: string;
+  proprietario: string;
   portfolio: string;
   chamado: string;
   migracao: string;
@@ -44,6 +45,7 @@ function parseCSV(csv: string): MunicipioData[] {
       entidade: columns[1] || '',
       municipio: columns[2] || '',
       uf: columns[3] || '',
+      proprietario: columns[4] || '', // Coluna 4 = Proprietário
       portfolio: columns[5] || '', // Coluna 5 = Portfólio
       chamado: columns[6] || '',
       migracao: columns[7] || '',

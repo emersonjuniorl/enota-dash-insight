@@ -90,6 +90,7 @@ const viradaChaveColors = {
 
 export interface FilterState {
   municipios: string[];
+  proprietarios: string[];
   portfolios: string[];
   statusImplantacao: string[];
   tributosCloud: string[];
@@ -100,6 +101,7 @@ export const Dashboard = () => {
   const { data: sheetData, loading, error } = useGoogleSheetData();
   const [filters, setFilters] = useState<FilterState>({
     municipios: [],
+    proprietarios: [],
     portfolios: [],
     statusImplantacao: [],
     tributosCloud: [],
@@ -110,6 +112,7 @@ export const Dashboard = () => {
   const filteredData = sheetData.filter(item => {
     return (
       (filters.municipios.length === 0 || filters.municipios.includes(item.municipio)) &&
+      (filters.proprietarios.length === 0 || filters.proprietarios.includes(item.proprietario)) &&
       (filters.portfolios.length === 0 || filters.portfolios.includes(item.portfolio)) &&
       (filters.statusImplantacao.length === 0 || filters.statusImplantacao.includes(item.statusImplantacao)) &&
       (filters.tributosCloud.length === 0 || filters.tributosCloud.includes(item.tributosCloud)) &&
